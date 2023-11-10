@@ -17,6 +17,7 @@ function createCard(cardData, deleteCallBack) {
 
   cardImage.src = cardData.link;
   cardTitle.textContent = cardData.name;
+  cardImage.alt = cardData.name;
 
   deleteButton.addEventListener("click", () => {
     deleteCallBack(cardElement);
@@ -39,7 +40,7 @@ function deleteCard(cardElement) {
 }
 
 // добавил от себя
-function addNewCard() {
+function openClosePopUp() {
   //  открытие попапа
   addButton.addEventListener("click", function () {
     popUpTypeNewCard.style.display = "flex";
@@ -52,4 +53,4 @@ function addNewCard() {
 }
 
 renderCards(initialCards, placesList, deleteCard);
-addNewCard();
+openClosePopUp();
