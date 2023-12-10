@@ -12,7 +12,6 @@ function closeEscPopup(evt) {
   if (evt.key === "Escape") {
     const popup = document.querySelector(".popup_is-opened");
     closePopup(popup);
-    document.removeEventListener("keydown", closeEscPopup);
   }
 }
 

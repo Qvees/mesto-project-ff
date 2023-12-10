@@ -1,15 +1,15 @@
-import "./index.css"; // немного не понял на счет файла index.js  он должен находится в папке components? Просто в коде вы выделили именно импорт index.css
+import "../index.css"; // немного не понял на счет файла index.js  он должен находится в папке components? Просто в коде вы выделили именно импорт index.css
 import {
   openPopup,
   closePopup,
   handleCloseButtonClick,
   handleOverlayClick,
   closeEscPopup,
-} from "./scripts/modal.js";
+} from "./modal.js";
 
-import { createCard, deleteCard, handleLike } from "./scripts/card.js";
+import { createCard, deleteCard, handleLike } from "./card.js";
 
-import { initialCards } from "./scripts/cards.js";
+import { initialCards } from "./cards.js";
 
 //  DOM узлы
 const placesList = document.querySelector(".places__list");
@@ -26,11 +26,12 @@ const profileName = document.querySelector(".profile__title");
 const profileDesctiption = document.querySelector(".profile__description");
 const openedPopup = document.querySelector(".popup_is-opened");
 const imagePopup = document.querySelector(".popup_type_image");
-const popupImage = imagePopup.querySelector(".popup__image");
+const photoFullImagePopup = imagePopup.querySelector(".popup__image");
 const placeName = imagePopup.querySelector(".popup__caption");
 const linkInput = newPlaceForm.querySelector(".popup__input_type_url");
 const placeNameInput = newPlaceForm.querySelector(".popup__input_type_card-name");
 const addCardPopup = document.querySelector(".popup_type_new-card");
+const editProfilePopup = document.querySelector(".popup_type_edit");
 
 // функция для отрисовки всех карточек на странице
 function renderCards(
@@ -51,9 +52,6 @@ function renderCards(
   });
 }
 
-// Функция создания карточки
-renderCards(initialCards, placesList, deleteCard, handleLike, handleImageClick);
-
 // слушатели для открытия закрытия попапов
 profileAddButton.addEventListener("click", handleCardAddButtonClick);
 editProfileButton.addEventListener("click", handleEditProfileButtonClick);
@@ -65,7 +63,7 @@ overlay.forEach((popup) => {
 });
 
 // Прикрепляем обработчик к форме:
-// он будет следить за событием “submit” - «отправка»
+// он будет следить за событием submit 
 formElementProfile.addEventListener(
   "submit",
   handleFormInformationProfileSubmit
@@ -87,10 +85,7 @@ function handleFormInformationProfileSubmit(evt) {
 
   profileName.textContent = nameInput.value;
   profileDesctiption.textContent = jobInput.value;
-
-  if (openedPopup) {
-    closePopup(openedPopup);
-  }
+  closePopup(editProfilePopup);
 }
 
 // обработчик кнопки открытия добавления карточки
@@ -100,7 +95,6 @@ function handleCardAddButtonClick() {
 
 // обработчик кнопки открытия редактирования профиля
 function handleEditProfileButtonClick() {
-  const editProfilePopup = document.querySelector(".popup_type_edit");
   // Заполнение полей ввода текущими данными пользователя
   nameInput.value = profileName.textContent;
   jobInput.value = profileDesctiption.textContent;
@@ -133,8 +127,11 @@ function handleNewPlaceFormSubmit(evt, addNewCard, newPlaceForm, closePopup) {
 // обработчик для клика по изображению карточки
 function handleImageClick(cardData) {
   // изображение и текст описания
-  popupImage.src = cardData.link;
-  popupImage.alt = cardData.name;
+  photoFullImagePopup.src = cardData.link;
+  photoFullImagePopup.alt = cardData.name;
   placeName.textContent = cardData.name;
   openPopup(imagePopup);
 }
+
+// Функция создания карточки
+renderCards(initialCards, placesList, deleteCard, handleLike, handleImageClick);

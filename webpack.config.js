@@ -7,7 +7,7 @@ const path = require('path'); // подключаем path к конфигу в�
 
 module.exports = {
     // module.exports — это синтаксис экспорта в Node.js 
-    entry: { main: './src/index.js' },
+    entry: { main: './src/components/index.js' },
     // указали первое место, куда заглянет webpack, — файл index.js в папке src 
     output: {
         path: path.resolve(__dirname, 'dist'),
