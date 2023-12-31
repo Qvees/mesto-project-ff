@@ -25,3 +25,8 @@
     line-height: 17px;
   }
 }
+
+button[disabled] {
+  opacity: 0.5;
+  
+}
