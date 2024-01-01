@@ -1,7 +1,7 @@
 //есть проблема при добавление новой карточки.
 //Когда я нажимаю сохранить появляется ошибка,
 //но карточка отправляется на сервер и если перезагрузить страницу она появится. Как я поянл эта ошибка из за кода в card.js
-// на Проверку совпадает ли ID пользователя с владельцем карточки. Как ее исправить так и не понял.
+// на Проверку совпадает ли ID пользователя с владельцем карточки. Как ее исправить так и не понял.(решил проблему) Кажется я тут намудрил :)
 import "../index.css";
 import {
   openPopup,
@@ -28,9 +28,7 @@ const placesList = document.querySelector(".places__list");
 const profileAddButton = document.querySelector(".profile__add-button");
 const closeButtons = document.querySelectorAll(".popup__close");
 const overlay = document.querySelectorAll(".popup");
-const newPlaceForm = document.querySelector(
-  ".popup_type_new-card .popup__form"
-);
+const newPlaceForm = document.querySelector(".popup_type_new-card .popup__form");
 const editProfileButton = document.querySelector(".profile__edit-button");
 const popupForm = document.querySelector(".popup__form");
 const popupAllForms = document.querySelectorAll(".popup__form");
@@ -46,15 +44,14 @@ const imagePopup = document.querySelector(".popup_type_image");
 const photoFullImagePopup = imagePopup.querySelector(".popup__image");
 const placeName = imagePopup.querySelector(".popup__caption");
 const linkInput = newPlaceForm.querySelector(".popup__input_type_url");
-const placeNameInput = newPlaceForm.querySelector(
-  ".popup__input_type_card-name"
-);
+const placeNameInput = newPlaceForm.querySelector(".popup__input_type_card-name");
 const addCardPopup = document.querySelector(".popup_type_new-card");
 const editProfilePopup = document.querySelector(".popup_type_edit");
 const formError = popupForm.querySelector(`.${popupInput.id}-error`);
 const popupProfilePhoto = document.querySelector(".popup-profile-photo");
 const editAvatar = document.querySelector(".edit-icon");
 const avatarUrlInput = document.querySelector(".popup__input_avatar");
+const likeCounter = document.querySelector(".card__like-counter");
 
 // функция для отрисовки всех карточек на странице
 function renderCards(
@@ -63,7 +60,7 @@ function renderCards(
   deleteCallback,
   likeCallBack,
   imageClickCallBack,
-  currentUser
+  currentUserId
 ) {
   cards.forEach((cardData) => {
     const cardElement = createCard(
@@ -71,7 +68,7 @@ function renderCards(
       deleteCallback,
       likeCallBack,
       imageClickCallBack,
-      currentUser
+      currentUserId
     );
     container.appendChild(cardElement);
   });
@@ -88,7 +85,7 @@ overlay.forEach((popup) => {
   popup.addEventListener("click", handleOverlayClick);
 });
 
-// Прикрепляем обработчик к форме:
+
 // слушатель на попапе профиля
 popupForm.addEventListener("submit", handleFormInformationProfileSubmit);
 
@@ -97,7 +94,7 @@ newPlaceForm.addEventListener("submit", (evt) => {
   handleNewPlaceFormSubmit(evt, addNewCard, newPlaceForm, closePopup);
 });
 
-// Вызов функции enableValidation
+
 enableValidation({
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
@@ -112,7 +109,7 @@ const validationConfig = {
   inputErrorClass: ".popup__input_type_error",
 };
 
-// Вызов clearValidation
+
 clearValidation(popupForm, validationConfig);
 
 //функция изменения имени и занятия профиля
@@ -125,11 +122,6 @@ function handleFormInformationProfileSubmit(evt) {
   postNameAndAbout(nameInput.value, jobInput.value);
   closePopup(editProfilePopup);
 }
-//функция отправки формы изменения аватарки
-function handleFormProfileAvatarSubmit(evt) {
-  evt.preventDefault();
-  profileImg.style.backgroundImage = avatarUrlInput.value;
-}
 
 // слушатель на отправку формы изменения аватара
 popupProfilePhoto.addEventListener("submit", (evt) => {
@@ -139,7 +131,7 @@ popupProfilePhoto.addEventListener("submit", (evt) => {
 
   changeAvatar(newAvatarLink)
     .then((updatedUserData) => {
-      // Если запрос на сервер выполнен успешно, обновляем аватар на странице
+      // если запрос на сервер выполнен успешно, обновляем аватар на странице
       profileImg.style.backgroundImage = `url('${newAvatarLink}')`;
       closePopup(popupProfilePhoto);
     })
@@ -167,15 +159,14 @@ function handleAddNewPhotoProfile() {
 }
 
 // функция для добавления новой карточки на страницу
-function addNewCard(name, link) {
-  const newCardData = { name, link };
+function addNewCard(name, link, likes, userId) {
+  const newCardData = { name, link, likes, userId };
 
   const newCardElement = createCard(
     newCardData,
     deleteCard,
     handleLike,
     handleImageClick,
-    getUserInfo._id // Поправляем здесь, используя информацию о пользователе
   );
   placesList.prepend(newCardElement);
 }
@@ -185,10 +176,13 @@ function handleNewPlaceFormSubmit(evt) {
   evt.preventDefault();
   const placeName = placeNameInput.value;
   const link = linkInput.value;
-  postNewCard(placeName, link)
+  const likes = likeCounter;
+  postNewCard(placeName, link,likes)
     .then((newCard) => {
-      addNewCard(newCard.name, newCard.link);
+      const userId = newCard.owner._id
+      addNewCard(newCard.name, newCard.link, newCard.likes,userId );
       newPlaceForm.reset(); // Очищаем форму после добавления карточки
+  
       closePopup(addCardPopup);
     })
     .catch((error) => {
@@ -215,8 +209,6 @@ function putNamePhotoAndJobProfile(name, job, avatar) {
 Promise.all([initialCards, getUserInfo])
   .then((value) => {
     const [initialCardsData, userInfo] = value;
-    console.log(initialCardsData, userInfo); //потом удалить
-
     //параметры для функции отрисовки карточек
     renderCards(
       initialCardsData,
@@ -224,7 +216,7 @@ Promise.all([initialCards, getUserInfo])
       deleteCard,
       handleLike,
       handleImageClick,
-      userInfo._id
+      userInfo._id,
     );
     putNamePhotoAndJobProfile(userInfo.name, userInfo.about, userInfo.avatar);
   })

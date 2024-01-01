@@ -91,7 +91,7 @@ function likeCard(cardId) {
       return response.json();
     })
     .then((updatedCard) => {
-      // Возвращаем объект с информацией о карточке из ответа на PUT-запрос
+
       return updatedCard;
     })
     .catch((error) => {
@@ -114,7 +114,7 @@ function removeLike(cardId) {
       if (!response.ok) {
         throw new Error(`Ошибка: ${response.status}`);
       }
-      // Возвращаем данные о карточке из ответа на DELETE-запрос
+   
       return response.json();
     })
     .catch((error) => {

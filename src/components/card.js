@@ -1,5 +1,5 @@
 // экспорт
-export { createCard, deleteCard, handleLike };
+export { createCard, deleteCard, handleLike};
 import { likeCard, removeLike, removeCard } from "./api.js";
 
 // создание карточки
@@ -8,7 +8,7 @@ function createCard(
   deleteCallBack,
   likeCallBack,
   imageClickCallBack,
-  currentUserId
+  currentUserId,
 ) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
@@ -17,13 +17,15 @@ function createCard(
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const likeButton = cardElement.querySelector(".card__like-button");
   const likeCounter = cardElement.querySelector(".card__like-counter");
-  console.log("cardData", cardData); // Проверьте значение cardData
-  console.log("currentUserId", currentUserId); // Пр
+  const userId = cardData.owner && cardData.owner._id;
+// ошибка возникает вот из за этого _id но там все передается нормально 
+  //пытался сделать разными способами остановился на присвоение cardData.owner._id в userId но опять ругается на этот _id (решил проблему такой записью) && 
+ 
 
-  // количество лайков из объекта cardData
   cardImage.src = cardData.link;
   cardTitle.textContent = cardData.name;
   cardImage.alt = cardData.name;
+    // количество лайков из объекта cardData
   likeCounter.textContent = cardData.likes.length;
 
   // проверка наличия лайка от текущего пользователя
@@ -40,6 +42,7 @@ function createCard(
   deleteButton.addEventListener("click", () => {
     deleteCallBack(cardElement, cardData._id); // Передаем ID карточки для удаления
   });
+
 
   likeButton.addEventListener("click", () => {
     if (likeButton.classList.contains("card__like-button_is-active")) {
@@ -76,9 +79,8 @@ function createCard(
   });
 
   // проверяем, совпадает ли ID пользователя с владельцем карточки
-  if (currentUserId === cardData.owner._id) {
+  if (currentUserId === userId) {
     deleteButton.style.display = "block";
-    console.log(cardData.owner._id);
   } else {
     deleteButton.style.display = "none";
   }
