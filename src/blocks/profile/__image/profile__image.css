@@ -9,6 +9,35 @@
   margin: 0 29px 0 0;
 }
 
+/* Скрыть иконку редактирования по умолчанию */
+.edit-icon {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: -8%;
+  width: 120px;
+  height: 120px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  background-size: cover;
+  background-position: center;
+  padding: 5px;
+}
+.svg {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  margin: 50px 0px 0px 50px;
+}
+
+/* Отображение иконки редактирования при наведении на аватар */
+.profile-photo-edit:hover .edit-icon {
+  display: block;
+}
+
 @media screen and (max-width: 740px) {
   .profile__image {
     margin: 0 10px 0 0;

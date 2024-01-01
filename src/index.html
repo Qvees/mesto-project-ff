@@ -14,7 +14,16 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div class="profile__image" style=""></div>
+      <div class="profile-photo-edit">
+        <div class="profile__image" style=""></div>
+        <div class="edit-icon">
+          <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <path
+              d="M26 3.45351L6.76981 22.7932L3.33585 19.2903L22.517 0L26 3.45351ZM0 26L5.10189 24.4706L1.52075 21.0171L0 26Z"
+              fill="white" />
+          </svg>
+        </div>
+      </div>
       <div class="profile__info">
         <h1 class="profile__title"></h1>
         <button class="profile__edit-button" type="button"></button>
@@ -45,6 +54,17 @@
       </form>
     </div>
   </div>
+  <div class="popup popup_type-new-profile-image popup_is-animated popup-profile-photo">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+    <form class="popup__form popup__form-image-profile" name="new-profile-photo" id="popup-form-image-profile">
+      <input type="url" name="link" class="popup__input popup__input_type_url popup__input_avatar" id="url-input" placeholder="Ссылка на фотографию" minlength="2" maxlength="200" required>
+      <span class="form__input-error url-input-error" ></span>
+      <button type="submit" class="button popup__button">Сохранить</button>
+    </form>
+  </div>
+</div>
   <div class="popup popup_type_new-card popup_is-animated">
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
