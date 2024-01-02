@@ -1,5 +1,5 @@
 // экспорт
-export { createCard, deleteCard, handleLike};
+export { createCard, deleteCard, handleLike, updateButtonState};
 import { likeCard, removeLike, removeCard } from "./api.js";
 
 // создание карточки
@@ -9,6 +9,7 @@ function createCard(
   likeCallBack,
   imageClickCallBack,
   currentUserId,
+  cardId
 ) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
@@ -17,9 +18,8 @@ function createCard(
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const likeButton = cardElement.querySelector(".card__like-button");
   const likeCounter = cardElement.querySelector(".card__like-counter");
-  const userId = cardData.owner && cardData.owner._id;
-// ошибка возникает вот из за этого _id но там все передается нормально 
-  //пытался сделать разными способами остановился на присвоение cardData.owner._id в userId но опять ругается на этот _id (решил проблему такой записью) && 
+  const userId = cardData.owner && cardData.owner._id; // не знаю на сколько это верно, но одна из проблем решилась. При добавление новой карточкина сайт была ошибка _id
+  const popupButtons = document.querySelectorAll(".popup__button")
  
 
   cardImage.src = cardData.link;
@@ -41,6 +41,7 @@ function createCard(
   // обработчики событий для кнопок
   deleteButton.addEventListener("click", () => {
     deleteCallBack(cardElement, cardData._id); // Передаем ID карточки для удаления
+    console.log(cardData._id)
   });
 
 
@@ -92,6 +93,7 @@ function createCard(
 function deleteCard(cardElement, cardId) {
   removeCard(cardId)
     .then(() => {
+      console.log('ssfs',cardId)
       cardElement.remove(); // Удаляем элемент карточки из DOM после успешного удаления с сервера
     })
     .catch((error) => {
@@ -102,4 +104,12 @@ function deleteCard(cardElement, cardId) {
 // обработчик для кнопки лайк
 function handleLike(likeButton) {
   likeButton.classList.toggle("card__like-button_is-active");
+}
+
+// Общая функция для обновления текста кнопок отправки формы
+function updateButtonState(buttons, newState) {
+  buttons.forEach((button) => {
+    button.textContent = newState;
+    button.disabled = newState === "Сохранение..."; // Деактивация кнопок на время загрузки данных
+  });
 }

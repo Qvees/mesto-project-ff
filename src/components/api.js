@@ -71,6 +71,7 @@ function removeCard(cardId) {
     }
     return response.json();
   });
+  console.log(cardId)
 }
 
 function likeCard(cardId) {

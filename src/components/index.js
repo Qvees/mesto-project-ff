@@ -1,17 +1,15 @@
 //есть проблема при добавление новой карточки.
-//Когда я нажимаю сохранить появляется ошибка,
-//но карточка отправляется на сервер и если перезагрузить страницу она появится. Как я поянл эта ошибка из за кода в card.js
-// на Проверку совпадает ли ID пользователя с владельцем карточки. Как ее исправить так и не понял.(решил проблему) Кажется я тут намудрил :)
-import "../index.css";
+//она не удаляется, только если перезагузить сайт
+//если удалять сразу на сервер идет undefiend. Вроде cardId передается. В чем проблема не могу понять. Кажется я тут намудрил.
 import {
-  openPopup,
+  openPopup, 
   closePopup,
   handleCloseButtonClick,
   handleOverlayClick,
   closeEscPopup,
 } from "./modal.js";
 
-import { createCard, deleteCard, handleLike } from "./card.js";
+import { createCard, deleteCard, handleLike,updateButtonState } from "./card.js";
 import { enableValidation, clearValidation } from "./validation.js";
 import {
   initialCards,
@@ -52,6 +50,8 @@ const popupProfilePhoto = document.querySelector(".popup-profile-photo");
 const editAvatar = document.querySelector(".edit-icon");
 const avatarUrlInput = document.querySelector(".popup__input_avatar");
 const likeCounter = document.querySelector(".card__like-counter");
+const popupButtons = document.querySelectorAll(".popup__button")
+
 
 // функция для отрисовки всех карточек на странице
 function renderCards(
@@ -60,15 +60,15 @@ function renderCards(
   deleteCallback,
   likeCallBack,
   imageClickCallBack,
-  currentUserId
-) {
+  currentUserId,
+){
   cards.forEach((cardData) => {
     const cardElement = createCard(
       cardData,
       deleteCallback,
       likeCallBack,
       imageClickCallBack,
-      currentUserId
+      currentUserId,
     );
     container.appendChild(cardElement);
   });
@@ -94,7 +94,6 @@ newPlaceForm.addEventListener("submit", (evt) => {
   handleNewPlaceFormSubmit(evt, addNewCard, newPlaceForm, closePopup);
 });
 
-
 enableValidation({
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
@@ -117,10 +116,13 @@ function handleFormInformationProfileSubmit(evt) {
   evt.preventDefault();
   profileName.textContent = nameInput.value;
   profileDesctiption.textContent = jobInput.value;
-
+  updateButtonState(popupButtons, "Сохранение...");
   //вызов функции отправки на сервер
   postNameAndAbout(nameInput.value, jobInput.value);
   closePopup(editProfilePopup);
+  setTimeout(() => {
+    updateButtonState(popupButtons, "Сохранить");
+  },1000);
 }
 
 // слушатель на отправку формы изменения аватара
@@ -128,12 +130,15 @@ popupProfilePhoto.addEventListener("submit", (evt) => {
   evt.preventDefault();
   const newAvatarLink = avatarUrlInput.value; // Получаем новую ссылку на аватар из поля формы
   avatarUrlInput.value = "";
-
+  updateButtonState(popupButtons, "Сохранение...");
   changeAvatar(newAvatarLink)
     .then((updatedUserData) => {
       // если запрос на сервер выполнен успешно, обновляем аватар на странице
       profileImg.style.backgroundImage = `url('${newAvatarLink}')`;
       closePopup(popupProfilePhoto);
+      setTimeout(() => {
+        updateButtonState(popupButtons, "Сохраненить");
+      }, 1000);
     })
     .catch((error) => {
       console.error("Ошибка при смене аватара:", error);
@@ -159,9 +164,8 @@ function handleAddNewPhotoProfile() {
 }
 
 // функция для добавления новой карточки на страницу
-function addNewCard(name, link, likes, userId) {
-  const newCardData = { name, link, likes, userId };
-
+function addNewCard(name, link, likes, userId, cardId) {
+  const newCardData = { name, link, likes, userId,cardId};
   const newCardElement = createCard(
     newCardData,
     deleteCard,
@@ -177,13 +181,17 @@ function handleNewPlaceFormSubmit(evt) {
   const placeName = placeNameInput.value;
   const link = linkInput.value;
   const likes = likeCounter;
+  updateButtonState(popupButtons, "Сохранение...");
   postNewCard(placeName, link,likes)
     .then((newCard) => {
       const userId = newCard.owner._id
-      addNewCard(newCard.name, newCard.link, newCard.likes,userId );
+      addNewCard(newCard.name, newCard.link, newCard.likes, userId, newCard._id);
+      console.log('handlenewplaceform', newCard._id)//тут норм
       newPlaceForm.reset(); // Очищаем форму после добавления карточки
-  
       closePopup(addCardPopup);
+      setTimeout(() => {
+        updateButtonState(popupButtons, "Сохранить");
+      },1000);
     })
     .catch((error) => {
       console.error("Ошибка при добавлении карточки:", error);
@@ -223,3 +231,5 @@ Promise.all([initialCards, getUserInfo])
   .catch((error) => {
     console.error("Ошибка:", error);
   });
+
+
