@@ -1,25 +1,25 @@
 const token = "3b3afde6-a24d-4435-b967-1a1522a2423b";
 const cohortId = "wff-cohort-3";
 
-let getUserInfo = new Promise((resolve, reject) => {
-  fetch(`https://nomoreparties.co/v1/${cohortId}/users/me`, {
+function getUserInfo() {
+  return fetch(`https://nomoreparties.co/v1/${cohortId}/users/me`, {
     headers: {
       authorization: token,
     },
   }).then((response) => {
-    resolve(response.json());
+    return response.json();
   });
-});
+}
 
-let initialCards = new Promise((resolve, reject) => {
-  fetch(`https://nomoreparties.co/v1/${cohortId}/cards`, {
+function initialCards() {
+  return fetch(`https://nomoreparties.co/v1/${cohortId}/cards`, {
     headers: {
       authorization: token,
     },
   }).then((data) => {
-    resolve(data.json());
+    return data.json();
   });
-});
+}
 
 function postNameAndAbout(name, about) {
   return fetch(`https://nomoreparties.co/v1/${cohortId}/users/me`, {
@@ -32,12 +32,7 @@ function postNameAndAbout(name, about) {
       name: name,
       about: about,
     }),
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error(`Ошибка: ${response.status}`);
-    }
-    return response.json();
-  });
+  }).then(checkResponse);
 }
 
 function postNewCard(name, link) {
@@ -73,30 +68,23 @@ function removeCard(cardId) {
   });
 }
 
-function likeCard(cardId) {
-  return fetch(
-    `https://nomoreparties.co/v1/${cohortId}/cards/likes/${cardId}`,
-    {
-      method: "PUT",
-      headers: {
-        authorization: token,
-        "Content-Type": "application/json",
-      },
-    }
-  )
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка: ${response.status}`);
-      }
-      return response.json();
+function likeCard(cardId) { 
+  return fetch( 
+    `https://nomoreparties.co/v1/${cohortId}/cards/likes/${cardId}`, 
+    { 
+      method: "PUT", 
+      headers: { 
+        authorization: token, 
+        "Content-Type": "application/json", 
+      }, 
+    } 
+  ) 
+    .then((response) => { 
+      if (!response.ok) { 
+        throw new Error(`Ошибка: ${response.status}`); 
+      } 
+      return response.json(); 
     })
-    .then((updatedCard) => {
-
-      return updatedCard;
-    })
-    .catch((error) => {
-      throw new Error(`Ошибка при лайке карточки: ${error.message}`);
-    });
 }
 
 function removeLike(cardId) {
@@ -117,9 +105,6 @@ function removeLike(cardId) {
    
       return response.json();
     })
-    .catch((error) => {
-      throw new Error(`Ошибка при удалении лайка: ${error.message}`);
-    });
 }
 
 //функция смены аватарки
@@ -138,9 +123,6 @@ function changeAvatar(avatarLink) {
       }
       return response.json();
     })
-    .catch((error) => {
-      throw new Error(`Ошибка при смене аватара: ${error.message}`);
-    });
 }
 
 export {

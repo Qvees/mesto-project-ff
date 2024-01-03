@@ -1,7 +1,4 @@
-//есть проблема при добавление новой карточки.
-//она не удаляется, только если перезагузить сайт
-//если удалять сразу на сервер идет undefiend. Вроде cardId передается. В чем проблема не могу понять. Кажется я тут намудрил.
-//Я пока не публиковал сайт так как есть проблема.
+
 import {
   openPopup, 
   closePopup,
@@ -167,12 +164,14 @@ function handleAddNewPhotoProfile() {
 
 // функция для добавления новой карточки на страницу
 function addNewCard(name, link, likes, userId, cardId) {
-  const newCardData = { name, link, likes, userId,cardId};
+  const newCardData = { name, link, likes, owner: { _id: userId }, _id: cardId };
   const newCardElement = createCard(
     newCardData,
     deleteCard,
     handleLike,
     handleImageClick,
+    userId,
+    cardId
   );
   placesList.prepend(newCardElement);
 }
@@ -215,23 +214,20 @@ function putNamePhotoAndJobProfile(name, job, avatar) {
   profileImg.style.backgroundImage = `url('${avatar}')`;
 }
 
-//промисы получения данных с сервера
-Promise.all([initialCards, getUserInfo])
-  .then((value) => {
-    const [initialCardsData, userInfo] = value;
-    //параметры для функции отрисовки карточек
-    renderCards(
-      initialCardsData,
-      placesList,
-      deleteCard,
-      handleLike,
-      handleImageClick,
-      userInfo._id,
-    );
+function loadDataFromServer() {
+  return Promise.all([getUserInfo(), initialCards()]);
+}
+
+// использование Promise.all() для загрузки данных
+loadDataFromServer()
+  .then(([userInfo, cardsData]) => {
+   
+    renderCards(cardsData, placesList, deleteCard, handleLike, handleImageClick, userInfo._id);
     putNamePhotoAndJobProfile(userInfo.name, userInfo.about, userInfo.avatar);
   })
   .catch((error) => {
-    console.error("Ошибка:", error);
+    console.error('Ошибка при загрузке данных:', error);
   });
+  
 
 

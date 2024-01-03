@@ -18,8 +18,7 @@ function createCard(
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const likeButton = cardElement.querySelector(".card__like-button");
   const likeCounter = cardElement.querySelector(".card__like-counter");
-  const userId = cardData.owner // не знаю на сколько это верно, но одна из проблем решилась. 
-  //При добавление новой карточкина сайт была ошибка _id
+  const userId = cardData.owner._id
   const popupButtons = document.querySelectorAll(".popup__button")
  
 
@@ -95,7 +94,7 @@ function deleteCard(cardElement, cardId) {
   removeCard(cardId)
     .then(() => {
       console.log('ssfs',cardId)
-      cardElement.remove(); // Удаляем элемент карточки из DOM после успешного удаления с сервера
+      cardElement.remove(); // удаляем элемент карточки из DOM после успешного удаления с сервера
     })
     .catch((error) => {
       console.error("Ошибка при удалении карточки:", error);
@@ -107,10 +106,10 @@ function handleLike(likeButton) {
   likeButton.classList.toggle("card__like-button_is-active");
 }
 
-// Общая функция для обновления текста кнопок отправки формы
+//функция для обновления текста кнопок отправки формы
 function updateButtonState(buttons, newState) {
   buttons.forEach((button) => {
     button.textContent = newState;
-    button.disabled = newState === "Сохранение..."; // Деактивация кнопок на время загрузки данных
+    button.disabled = newState === "Сохранение..."; 
   });
 }
