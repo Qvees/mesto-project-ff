@@ -18,7 +18,8 @@ function createCard(
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const likeButton = cardElement.querySelector(".card__like-button");
   const likeCounter = cardElement.querySelector(".card__like-counter");
-  const userId = cardData.owner && cardData.owner._id; // не знаю на сколько это верно, но одна из проблем решилась. При добавление новой карточкина сайт была ошибка _id
+  const userId = cardData.owner // не знаю на сколько это верно, но одна из проблем решилась. 
+  //При добавление новой карточкина сайт была ошибка _id
   const popupButtons = document.querySelectorAll(".popup__button")
  
 

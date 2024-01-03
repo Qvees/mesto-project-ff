@@ -9,11 +9,12 @@ import {
   handleOverlayClick,
   closeEscPopup,
 } from "./modal.js";
+import '../index.css';
 
 import { createCard, deleteCard, handleLike,updateButtonState } from "./card.js";
 import { enableValidation, clearValidation } from "./validation.js";
 import {
-  initialCards,
+  initialCards, 
   getUserInfo,
   postNameAndAbout,
   postNewCard,
