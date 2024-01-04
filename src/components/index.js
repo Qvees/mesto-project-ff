@@ -11,7 +11,7 @@ import '../index.css';
 import { createCard, deleteCard, handleLike,updateButtonState } from "./card.js";
 import { enableValidation, clearValidation } from "./validation.js";
 import {
-  initialCards, 
+  getCards, 
   getUserInfo,
   postNameAndAbout,
   postNewCard,
@@ -215,7 +215,7 @@ function putNamePhotoAndJobProfile(name, job, avatar) {
 }
 
 function loadDataFromServer() {
-  return Promise.all([getUserInfo(), initialCards()]);
+  return Promise.all([getUserInfo(), getCards()]);
 }
 
 // использование Promise.all() для загрузки данных

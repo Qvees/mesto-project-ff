@@ -1,24 +1,28 @@
 const token = "3b3afde6-a24d-4435-b967-1a1522a2423b";
 const cohortId = "wff-cohort-3";
 
+
+function checkResponse(response) {
+  if (!response.ok) {
+    throw new Error(`Ошибка: ${response.status}`);
+  }
+  return response.json();
+}
+
 function getUserInfo() {
   return fetch(`https://nomoreparties.co/v1/${cohortId}/users/me`, {
     headers: {
       authorization: token,
     },
-  }).then((response) => {
-    return response.json();
-  });
+  }).then(checkResponse);
 }
 
-function initialCards() {
+function getCards() { // извиняюсь из головы вылетело
   return fetch(`https://nomoreparties.co/v1/${cohortId}/cards`, {
     headers: {
       authorization: token,
     },
-  }).then((data) => {
-    return data.json();
-  });
+  }).then(checkResponse);
 }
 
 function postNameAndAbout(name, about) {
@@ -46,12 +50,7 @@ function postNewCard(name, link) {
       name: name,
       link: link,
     }),
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error(`Ошибка: ${response.status}`);
-    }
-    return response.json();
-  });
+  }).then(checkResponse);
 }
 
 function removeCard(cardId) {
@@ -60,31 +59,20 @@ function removeCard(cardId) {
     headers: {
       authorization: token,
     },
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error(`Ошибка: ${response.status}`);
-    }
-    return response.json();
-  });
+  }).then(checkResponse);
 }
 
-function likeCard(cardId) { 
-  return fetch( 
-    `https://nomoreparties.co/v1/${cohortId}/cards/likes/${cardId}`, 
-    { 
-      method: "PUT", 
-      headers: { 
-        authorization: token, 
-        "Content-Type": "application/json", 
-      }, 
-    } 
-  ) 
-    .then((response) => { 
-      if (!response.ok) { 
-        throw new Error(`Ошибка: ${response.status}`); 
-      } 
-      return response.json(); 
-    })
+function likeCard(cardId) {
+  return fetch(
+    `https://nomoreparties.co/v1/${cohortId}/cards/likes/${cardId}`,
+    {
+      method: "PUT",
+      headers: {
+        authorization: token,
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(checkResponse);
 }
 
 function removeLike(cardId) {
@@ -97,17 +85,9 @@ function removeLike(cardId) {
         "Content-Type": "application/json",
       },
     }
-  )
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка: ${response.status}`);
-      }
-   
-      return response.json();
-    })
+  ).then(checkResponse);
 }
 
-//функция смены аватарки
 function changeAvatar(avatarLink) {
   return fetch(`https://nomoreparties.co/v1/${cohortId}/users/me/avatar`, {
     method: "PATCH",
@@ -116,17 +96,11 @@ function changeAvatar(avatarLink) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ avatar: avatarLink }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Ошибка: ${response.status}`);
-      }
-      return response.json();
-    })
+  }).then(checkResponse);
 }
 
 export {
-  initialCards,
+  getCards,
   getUserInfo,
   postNameAndAbout,
   postNewCard,
