@@ -1,5 +1,5 @@
 // экспорт
-export { createCard, deleteCard, handleLike, updateButtonState};
+export { createCard, deleteCard, handleLike};
 import { likeCard, removeLike, removeCard } from "./api.js";
 
 // создание карточки
@@ -19,7 +19,7 @@ function createCard(
   const likeButton = cardElement.querySelector(".card__like-button");
   const likeCounter = cardElement.querySelector(".card__like-counter");
   const userId = cardData.owner._id
-  const popupButtons = document.querySelectorAll(".popup__button")
+  
  
 
   cardImage.src = cardData.link;
@@ -106,10 +106,3 @@ function handleLike(likeButton) {
   likeButton.classList.toggle("card__like-button_is-active");
 }
 
-//функция для обновления текста кнопок отправки формы
-function updateButtonState(buttons, newState) {
-  buttons.forEach((button) => {
-    button.textContent = newState;
-    button.disabled = newState === "Сохранение..."; 
-  });
-}

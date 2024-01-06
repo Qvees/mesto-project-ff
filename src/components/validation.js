@@ -1,8 +1,16 @@
 // функция показ ошибки
+const validationConfig = {
+    formSelector: ".popup__form",
+    inputSelector: ".popup__input",
+    submitButtonSelector: ".popup__button",
+    inputErrorClass: ".popup__input_type_error",
+  };
+// не много не понял сути задания (нужно передать как параметры при вызове функций или так как я сделал) остальное все поправил вроде
 function showInputError(formElement, inputElement, errorMessage, inputErrorClass) {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    errorElement.style.fontSize = '12px';
     inputElement.classList.add(inputErrorClass);
-    inputElement.classList.add('form__input_type_error');
+    inputElement.classList.add(validationConfig.inputErrorClass); // использовал селектор из конфига
     errorElement.textContent = errorMessage;
     errorElement.classList.add('form__input-error_active');
 }
@@ -11,7 +19,7 @@ function showInputError(formElement, inputElement, errorMessage, inputErrorClass
 function hideInputError(formElement, inputElement, inputErrorClass) {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     inputElement.classList.remove(inputErrorClass);
-    inputElement.classList.remove('form__input_type_error');
+    inputElement.classList.remove(validationConfig.inputErrorClass); // использовал селектор из конфига
     errorElement.classList.remove('form__input-error_visible');
     errorElement.textContent = '';
 }
@@ -87,10 +95,13 @@ function enableValidation(validationConfig) {
 function clearValidation(formElement, validationConfig) {
     const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
     const submitButton = formElement.querySelector(validationConfig.submitButtonSelector);
+    
     inputList.forEach((inputElement) => {
         hideInputError(formElement, inputElement, validationConfig.inputErrorClass);
     });
+    
     submitButton.setAttribute('disabled', true);
 }
+
 
 export { enableValidation, clearValidation };

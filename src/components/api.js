@@ -1,5 +1,6 @@
 const token = "3b3afde6-a24d-4435-b967-1a1522a2423b";
 const cohortId = "wff-cohort-3";
+const url = "https://nomoreparties.co/v1/";
 
 
 function checkResponse(response) {
@@ -10,7 +11,7 @@ function checkResponse(response) {
 }
 
 function getUserInfo() {
-  return fetch(`https://nomoreparties.co/v1/${cohortId}/users/me`, {
+  return fetch(`${url}${cohortId}/users/me`, {
     headers: {
       authorization: token,
     },
@@ -18,15 +19,15 @@ function getUserInfo() {
 }
 
 function getCards() { // извиняюсь из головы вылетело
-  return fetch(`https://nomoreparties.co/v1/${cohortId}/cards`, {
+  return fetch(`${url}${cohortId}/cards`, {
     headers: {
       authorization: token,
     },
   }).then(checkResponse);
 }
 
-function postNameAndAbout(name, about) {
-  return fetch(`https://nomoreparties.co/v1/${cohortId}/users/me`, {
+function updateUserInfo(name, about) {
+  return fetch(`${url}${cohortId}/users/me`, {
     method: "PATCH",
     headers: {
       authorization: token,
@@ -40,7 +41,7 @@ function postNameAndAbout(name, about) {
 }
 
 function postNewCard(name, link) {
-  return fetch(`https://nomoreparties.co/v1/${cohortId}/cards`, {
+  return fetch(`${url}${cohortId}/cards`, {
     method: "POST",
     headers: {
       authorization: token,
@@ -54,7 +55,7 @@ function postNewCard(name, link) {
 }
 
 function removeCard(cardId) {
-  return fetch(`https://nomoreparties.co/v1/${cohortId}/cards/${cardId}`, {
+  return fetch(`${url}${cohortId}/cards/${cardId}`, {
     method: "DELETE",
     headers: {
       authorization: token,
@@ -64,7 +65,7 @@ function removeCard(cardId) {
 
 function likeCard(cardId) {
   return fetch(
-    `https://nomoreparties.co/v1/${cohortId}/cards/likes/${cardId}`,
+    `${url}${cohortId}/cards/likes/${cardId}`,
     {
       method: "PUT",
       headers: {
@@ -77,7 +78,7 @@ function likeCard(cardId) {
 
 function removeLike(cardId) {
   return fetch(
-    `https://nomoreparties.co/v1/${cohortId}/cards/likes/${cardId}`,
+    `${url}${cohortId}/cards/likes/${cardId}`,
     {
       method: "DELETE",
       headers: {
@@ -89,7 +90,7 @@ function removeLike(cardId) {
 }
 
 function changeAvatar(avatarLink) {
-  return fetch(`https://nomoreparties.co/v1/${cohortId}/users/me/avatar`, {
+  return fetch(`${url}${cohortId}/users/me/avatar`, { 
     method: "PATCH",
     headers: {
       authorization: token,
@@ -102,7 +103,7 @@ function changeAvatar(avatarLink) {
 export {
   getCards,
   getUserInfo,
-  postNameAndAbout,
+  updateUserInfo,
   postNewCard,
   removeCard,
   likeCard,
