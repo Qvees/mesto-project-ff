@@ -52,8 +52,11 @@ const addAvatarPopup = document.querySelector(".popup__form-image-profile")
 const editAvatar = document.querySelector(".edit-icon");
 const avatarUrlInput = document.querySelector(".popup__input_avatar");
 const likeCounter = document.querySelector(".card__like-counter");
-const popupButtons = document.querySelectorAll(".popup__button")
-const addNewAvaratPopup = document.querySelector("#popup-form-image-profile")
+const popupButtons = document.querySelectorAll(".popup__button");
+const addNewAvaratPopup = document.querySelector("#popup-form-image-profile");
+const saveInfoProfileButton = document.querySelector(".save-info-profile-button");
+const saveNewAvatardButton  = document.querySelector(".save-new-avatar-button");
+const saveNewCardButton = document.querySelector(".save-new-card-button")
 
 
 // функция для отрисовки всех карточек на странице
@@ -111,7 +114,7 @@ enableValidation(validationConfig);
 //функция изменения имени и занятия профиля
 function handleFormInformationProfileSubmit(evt) {
   evt.preventDefault();
-  updateButtonState(popupButtons, "Сохранение...");
+  updateButtonState(saveInfoProfileButton, "Сохранение...");
   
   updateUserInfo(nameInput.value, jobInput.value)
     .then(() => {
@@ -123,7 +126,7 @@ function handleFormInformationProfileSubmit(evt) {
       console.error("Ошибка при обновлении информации:", error);
     })
     .finally(() => {
-      updateButtonState(popupButtons, "Сохранить");
+      updateButtonState(saveInfoProfileButton, "Сохранить");
     });
 }
 
@@ -132,7 +135,7 @@ function handleFormInformationProfileSubmit(evt) {
 popupProfilePhoto.addEventListener("submit", (evt) => {
   evt.preventDefault();
   const newAvatarLink = avatarUrlInput.value; // Получаем новую ссылку на аватар из поля формы
-  updateButtonState(popupButtons, "Сохранение...");
+  updateButtonState(saveNewAvatardButton, "Сохранение...");
   
   changeAvatar(newAvatarLink)
     .then((updatedUserData) => {
@@ -144,7 +147,7 @@ popupProfilePhoto.addEventListener("submit", (evt) => {
       console.error("Ошибка при смене аватара:", error);
     })
     .finally(() => {
-      updateButtonState(popupButtons, "Сохранить");
+      updateButtonState(saveNewAvatardButton, "Сохранить");
     });
 });
 
@@ -192,7 +195,7 @@ function handleNewPlaceFormSubmit(evt) {
   const placeName = placeNameInput.value;
   const link = linkInput.value;
   const likes = likeCounter;
-  updateButtonState(popupButtons, "Сохранение...");
+  updateButtonState(saveNewCardButton, "Сохранение...");
   
   postNewCard(placeName, link, likes)
     .then((newCard) => {
@@ -205,7 +208,7 @@ function handleNewPlaceFormSubmit(evt) {
       console.error("Ошибка при добавлении карточки:", error);
     })
     .finally(() => {
-      updateButtonState(popupButtons, "Сохранить");
+      updateButtonState(saveNewCardButton, "Сохранить");
     });
 }
 
