@@ -1,26 +1,17 @@
 // функция показ ошибки
-const validationConfig = {
-    formSelector: ".popup__form",
-    inputSelector: ".popup__input",
-    submitButtonSelector: ".popup__button",
-    inputErrorClass: ".popup__input_type_error",
-  };
-// не много не понял сути задания (нужно передать как параметры при вызове функций или так как я сделал) остальное все поправил вроде
-function showInputError(formElement, inputElement, errorMessage, inputErrorClass) {
+function showInputError(formElement, inputElement, errorMessage, inputErrorClass, errorActive) {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-    errorElement.style.fontSize = '12px';
     inputElement.classList.add(inputErrorClass);
-    inputElement.classList.add(validationConfig.inputErrorClass); // использовал селектор из конфига
+    errorElement.classList.add(errorActive);
     errorElement.textContent = errorMessage;
-    errorElement.classList.add('form__input-error_active');
+   
 }
 
 // скрыть ошибку
-function hideInputError(formElement, inputElement, inputErrorClass) {
+function hideInputError(formElement, inputElement, inputErrorClass, errorActive) {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     inputElement.classList.remove(inputErrorClass);
-    inputElement.classList.remove(validationConfig.inputErrorClass); // использовал селектор из конфига
-    errorElement.classList.remove('form__input-error_visible');
+    errorElement.classList.remove(errorActive);
     errorElement.textContent = '';
 }
 
@@ -31,33 +22,33 @@ function isRegularInvalid(inputElement) {
 }
 
 // Проверка валидность ввода отображение ошибок 
-function checkInputValidity(formElement, inputElement, inputErrorClass) {
+function checkInputValidity(formElement, inputElement, inputErrorClass, errorActive) {
     if (inputElement.getAttribute('type') === 'url') {
         if (!inputElement.validity.valid) {
             const errorMessage = inputElement.dataset.customError || inputElement.validationMessage;
-            showInputError(formElement, inputElement, errorMessage, inputErrorClass);
+            showInputError(formElement, inputElement, errorMessage, inputErrorClass, errorActive);
         } else {
-            hideInputError(formElement, inputElement, inputErrorClass);
+            hideInputError(formElement, inputElement, inputErrorClass, errorActive);
         }
     } else if (!inputElement.validity.valid) {
         const errorMessage = inputElement.dataset.customError || inputElement.validationMessage;
-        showInputError(formElement, inputElement, errorMessage, inputErrorClass);
+        showInputError(formElement, inputElement, errorMessage, inputErrorClass, errorActive);
     } else if (isRegularInvalid(inputElement)) {
         const errorMessage = inputElement.dataset.customError || 'Используйте только латинские и кириллические буквы, знаки дефиса и пробелы.';
-        showInputError(formElement, inputElement, errorMessage, inputErrorClass);
+        showInputError(formElement, inputElement, errorMessage, inputErrorClass, errorActive);
     } else {
-        hideInputError(formElement, inputElement, inputErrorClass);
+        hideInputError(formElement, inputElement, inputErrorClass, errorActive);
     }
 }
 
 //  обработчики событий для формы, полей ввода и кнопки отправки
-function setEventListeners(formElement, inputSelector, submitButtonSelector, inputErrorClass) {
+function setEventListeners(formElement, inputSelector, submitButtonSelector, inputErrorClass,errorActive) {
     const inputList = Array.from(formElement.querySelectorAll(inputSelector));
     const submitButton = formElement.querySelector(submitButtonSelector);
 
     inputList.forEach((inputElement) => {
         inputElement.addEventListener('input', function () {
-            checkInputValidity(formElement, inputElement, inputErrorClass);
+            checkInputValidity(formElement, inputElement, inputErrorClass,errorActive);
             toggleButtonState(inputList, submitButton);
         });
     });
@@ -87,7 +78,7 @@ function enableValidation(validationConfig) {
             evt.preventDefault();
         });
 
-        setEventListeners(formElement, validationConfig.inputSelector, validationConfig.submitButtonSelector, validationConfig.inputErrorClass);
+        setEventListeners(formElement, validationConfig.inputSelector, validationConfig.submitButtonSelector, validationConfig.inputErrorClass, validationConfig.errorActive);
     });
 }
 
@@ -97,7 +88,7 @@ function clearValidation(formElement, validationConfig) {
     const submitButton = formElement.querySelector(validationConfig.submitButtonSelector);
     
     inputList.forEach((inputElement) => {
-        hideInputError(formElement, inputElement, validationConfig.inputErrorClass);
+        hideInputError(formElement, inputElement, validationConfig.inputErrorClass, validationConfig.errorActive);
     });
     
     submitButton.setAttribute('disabled', true);

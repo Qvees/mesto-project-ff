@@ -105,6 +105,7 @@ const validationConfig = {
   inputSelector: ".popup__input",
   submitButtonSelector: ".popup__button",
   inputErrorClass: ".popup__input_type_error",
+  errorActive: "form__input-error_active"
 };
 
 enableValidation(validationConfig);
