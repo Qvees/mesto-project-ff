@@ -1,1 +1,1 @@
-https://github.com/Qvees/mesto-project-ff.git
+https://qvees.github.io/mesto-project-ff/
